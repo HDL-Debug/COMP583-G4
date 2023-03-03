@@ -1,5 +1,5 @@
 function CustomerViewer () {
-    return <span/>
+    return <Card/>
 }
 
 export default CustomerViewer;
