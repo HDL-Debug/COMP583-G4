@@ -1,22 +1,21 @@
 import logo from './logo.svg';
 import './App.css';
-import React, { Component }  from 'react';
-import { getDatabase, ref, child, get } from "firebase/database";
+import React from 'react';
+import { collection, getDocs, getFirestore } from "firebase/firestore";
 
-function App() {
-  /*
-  const dbRef = ref(getDatabase());
-  get(child(dbRef, `users/${userId}`)).then((snapshot) => {
-    if (snapshot.exists()) {
-      console.log(snapshot.val());
-    } else {
-      console.log("No data available");
-    }
-  }).catch((error) => {
-    console.error(error);
-  });
-  movieTitle = "" // Movie of the Day
-  */
+const printData = (doc) => {
+  console.log(doc.id, " => ", doc.data());
+}
+
+const fetchCollection = async (db) => {
+  const querySnapshot = await getDocs(collection(db, "Movies"));
+  querySnapshot.forEach(printData);
+};
+
+function App(props) {
+  const db = getFirestore(props.app);
+  fetchCollection(db);
+  
   return (
     <div className="App">
       <header className="App-header">
