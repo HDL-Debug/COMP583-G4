@@ -10,10 +10,13 @@ import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
+require('dotenv').config()
+
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDBrzZfX5BJJEPQpUxBmaFDNAY23k-I1oc",
+  //apiKey: process.env.FIREBASE_API_KEY,
+  apiKey: 'AIzaSyDBrzZfX5BJJEPQpUxBmaFDNAY23k-I1oc',
   authDomain: "comp-598-g4.firebaseapp.com",
   projectId: "comp-598-g4",
   storageBucket: "comp-598-g4.appspot.com",
@@ -28,9 +31,9 @@ const analytics = getAnalytics(app);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  //<React.StrictMode>
     <App app={app}/>
-  </React.StrictMode>
+  //</React.StrictMode>
 ); 
 
 
