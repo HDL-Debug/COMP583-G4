@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MovieBanner from '../components/MovieBanner';
 import { collection, getDocs } from "firebase/firestore";
+import Navbar from '../components/Navbar'
 
 const fetchCollection = async (db, collectionName, setData) => {
     const querySnapshot = await getDocs(collection(db, collectionName));
@@ -28,7 +29,10 @@ function Dashboard (props) {
         jsx = movies.map((e, index) => <MovieBanner title={e.data().MovieName} key={"b"+index}/>);
     }
 
-    return (jsx);
+    return <div>
+        <Navbar />
+        {jsx}
+    </div>;
 }
 
 export default Dashboard;
