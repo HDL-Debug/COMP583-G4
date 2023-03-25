@@ -5,6 +5,14 @@ import { Delete, Create } from '@mui/icons-material';
 // Consider using CardMedia for background image
 
 const styles = {
+    banner_container: {
+        marginTop: '2%', 
+        width: '100%'
+    },
+    banner_inner_content: {
+        display: "flex", 
+        alignItems: "center"
+    },
     icon: {
         px: 1,
         py: 1,
@@ -32,25 +40,25 @@ function MovieBanner (props) {
     }
 
     return <div>
-        <div style={{marginTop: '2%', marginLeft: '10%', width: '80%'}}>
-        <CardMedia
-            sx={{
-                width: '100%',
-                height: 100,
-                ':hover': {
-                    boxShadow: 20, // theme.shadows[20]
-                }
-            }}
-            image="https://img.freepik.com/free-vector/online-cinema-banner-with-open-clapper-board-film-strip_1419-2242.jpg"
-        >
-            <div style={{display: "flex", alignItems: "center"}}>
-                <p style={{paddingTop: 15, paddingLeft: 10, size: 20, fontSize: 22}}>{props.title}</p>
-                <div style={{marginTop: 15, marginLeft: "auto"}}>
-                    <IconButton style={{marginRight: 5}} onClick={handleOpen}><Delete sx={styles.icon}/></IconButton>
-                    <IconButton style={{marginRight: 5}}><Create sx={styles.icon}/></IconButton>
+        <div style={styles.banner_container}>
+            <CardMedia
+                sx={{
+                    width: '100%',
+                    height: 100,
+                    ':hover': {
+                        boxShadow: 20, // theme.shadows[20]
+                    }
+                }}
+                image="https://img.freepik.com/free-vector/online-cinema-banner-with-open-clapper-board-film-strip_1419-2242.jpg"
+            >
+                <div style={styles.banner_inner_content}>
+                    <p style={{paddingTop: 15, paddingLeft: 10, size: 20, fontSize: 22}}>{props.title}</p>
+                    <div style={{marginTop: 15, marginLeft: "auto"}}>
+                        <IconButton style={{marginRight: 5}} onClick={handleOpen}><Delete sx={styles.icon}/></IconButton>
+                        <IconButton style={{marginRight: 5}}><Create sx={styles.icon}/></IconButton>
+                    </div>
                 </div>
-            </div>
-        </CardMedia>
+            </CardMedia>
         </div>
         <Dialog
             open={open}

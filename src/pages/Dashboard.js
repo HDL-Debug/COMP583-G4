@@ -1,37 +1,57 @@
 import React, { useState, useEffect, useRef } from 'react';
-import MovieBanner from '../components/MovieBanner';
 import { collection, getDocs } from "firebase/firestore";
-import Navbar from '../components/Navbar'
+import { Button } from '@mui/material';
+import Navbar from '../components/Navbar';
+import MovieForm from '../components/MovieForm';
+import MovieBanner from '../components/MovieBanner';
 
 const fetchCollection = async (db, collectionName, setData) => {
     const querySnapshot = await getDocs(collection(db, collectionName));
     setData(querySnapshot.docs);
 };
 
+const styles = {
+    add_button: {
+        marginTop: '2%',
+        right: 0
+    },
+    movie_container: {
+        marginLeft: '10%',
+        width: '80%'
+    }
+};
+
 function Dashboard (props) {
-    console.log("Dashboard Render");
     const isInitialMount = useRef(true);
     const [movies, setMovies] = useState([]);
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         if (isInitialMount) {
-            console.log("Fetching Data");
             fetchCollection(props.db, "Movies", setMovies);
             isInitialMount.current = false;
         }
     }, []);
 
-    console.log(movies);
-
     let jsx = <p>No data at the moment.</p>;
     if (movies.length > 0) {
-        console.log("Rendering Banner");
         jsx = movies.map((e, index) => <MovieBanner title={e.data().MovieName} key={"b"+index}/>);
+    }
+
+    const handleAddMovie = () => {
+        setOpen(true)
     }
 
     return <div>
         <Navbar />
-        {jsx}
+        <div style={styles.movie_container}>
+            <Button variant="contained" style={styles.add_button} onClick={() => handleAddMovie()}>Add Movie</Button>
+            {jsx}
+        </div>
+        <MovieForm 
+            open={open}
+            setOpen={setOpen}
+        />
     </div>;
 }
 
