@@ -9,6 +9,7 @@ const fetchCollection = async (db, collectionName, setData) => {
     const querySnapshot = await getDocs(collection(db, collectionName));
     setData(querySnapshot.docs);
 };
+// MovieName, MovieDescription
 
 const styles = {
     add_button: {
@@ -35,7 +36,11 @@ function Dashboard (props) {
 
     let jsx = <p>No data at the moment.</p>;
     if (movies.length > 0) {
-        jsx = movies.map((e, index) => <MovieBanner title={e.data().MovieName} key={"b"+index}/>);
+        jsx = movies.map((e, index) => <MovieBanner 
+            title={e.data().MovieName} 
+            description={e.data().MovieDescription} 
+            key={"b"+index}
+        />);
     }
 
     const handleAddMovie = () => {

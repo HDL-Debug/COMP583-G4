@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CardMedia, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 import { Delete, Create } from '@mui/icons-material';
+import MovieForm from './MovieForm';
 
 // Consider using CardMedia for background image
 
@@ -24,19 +25,24 @@ const styles = {
 }
 
 function MovieBanner (props) {
-    const [open, setOpen] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
+    const [openEdit, setOpenEdit] = useState(false);
 
-    const handleOpen = () => {
-        setOpen(true);
+    const handleOpenDelete = () => {
+        setOpenDelete(true);
+    }
+
+    const handleOpenEdit = () => {
+        setOpenEdit(true);
     }
 
     const handleClose = (deleteMovie) => {
         if (deleteMovie) {
             // Handle removing the movie here.
-
+            // Remove it from the database.
             console.log(props.title + " was removed.");
         }
-        setOpen(false);
+        setOpenDelete(false);
     }
 
     return <div>
@@ -54,14 +60,14 @@ function MovieBanner (props) {
                 <div style={styles.banner_inner_content}>
                     <p style={{paddingTop: 15, paddingLeft: 10, size: 20, fontSize: 22}}>{props.title}</p>
                     <div style={{marginTop: 15, marginLeft: "auto"}}>
-                        <IconButton style={{marginRight: 5}} onClick={handleOpen}><Delete sx={styles.icon}/></IconButton>
-                        <IconButton style={{marginRight: 5}}><Create sx={styles.icon}/></IconButton>
+                        <IconButton style={{marginRight: 5}} onClick={handleOpenDelete}><Delete sx={styles.icon}/></IconButton>
+                        <IconButton style={{marginRight: 5}} onClick={handleOpenEdit}><Create sx={styles.icon}/></IconButton>
                     </div>
                 </div>
             </CardMedia>
         </div>
         <Dialog
-            open={open}
+            open={openDelete}
             onClose={() => handleClose(false)}
         >
             <DialogTitle>
@@ -78,6 +84,15 @@ function MovieBanner (props) {
                 <Button onClick={() => handleClose(false)} autoFocus>No</Button>
             </DialogActions>
         </Dialog>
+        <MovieForm 
+            variant="edit"
+            currentData={{
+                title: props.title, 
+                description: props.description
+            }}
+            open={openEdit}
+            setOpen={setOpenEdit}
+        />
     </div>;
 }
 

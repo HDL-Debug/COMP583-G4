@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from '@mui/material';
 
 const styles = {
@@ -15,17 +15,40 @@ const defaultEntry = {
     description: "Movie Description"
 }
 
+// Props
+// variant = add or edit
+// currentData
+// open
+// setOpen
 function MovieForm (props) {
-    const [entry, setEntry] = useState(defaultEntry);
+    let variant = props.variant;
+    if (variant == undefined) variant = "add";
+    const [entry, setEntry] = useState((variant == "add") ? defaultEntry : props.currentData);
+
+    useEffect(() => {
+        // This will run every time this opens or closes.
+        if (variant == "edit")
+            setEntry(props.currentData);
+    }, [props.open]);
 
     const handleClose = () => {
         props.setOpen(false);
-        setEntry(defaultEntry);
+        if (variant == "add")
+            setEntry(defaultEntry);
     }
 
     const handleAdd = () => {
         console.log(entry);
-        // Do something with entry here.
+        // Add the entry to the database here.
+        if (variant == "add") {
+            // Code for adding a new entry to the database here.
+        }
+        else {
+            // Code for editing an existing entry to the database here.
+            // If a reference to the ID is needed might be able to get this back in
+            // Dashboard.js and pass it forward to the Banner and then this component
+            // through props.
+        }
         handleClose();
     }
 
