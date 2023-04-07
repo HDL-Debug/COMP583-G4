@@ -5,12 +5,6 @@ import Navbar from '../components/Navbar';
 import MovieForm from '../components/MovieForm';
 import MovieBanner from '../components/MovieBanner';
 
-const fetchCollection = async (db, collectionName, setData) => {
-    const querySnapshot = await getDocs(collection(db, collectionName));
-    setData(querySnapshot.docs);
-};
-// MovieName, MovieDescription
-
 const styles = {
     add_button: {
         marginTop: '2%',
@@ -22,15 +16,22 @@ const styles = {
     }
 };
 
+const fetchCollection = async (db, collectionName, setData) => {
+    const querySnapshot = await getDocs(collection(db, collectionName));
+    setData(querySnapshot.docs);
+};
+// MovieName, MovieDescription
+
 function Dashboard (props) {
-    const isInitialMount = useRef(true);
+    const doMount = useRef(true);
     const [movies, setMovies] = useState([]);
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
-        if (isInitialMount) {
+        if (doMount) {
+            console.log("Dashboard is fetching!")
             fetchCollection(props.db, "Movies", setMovies);
-            isInitialMount.current = false;
+            doMount.current = false;
         }
     }, []);
 
@@ -56,6 +57,7 @@ function Dashboard (props) {
         <MovieForm 
             open={open}
             setOpen={setOpen}
+            doMount={doMount}
         />
     </div>;
 }

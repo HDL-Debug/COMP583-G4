@@ -12,10 +12,10 @@ const styles = {
 
 const navs = [
     {
-        name: "Name1"
+        name: "Showtimes"
     },
     {
-        name: "Name2"
+        name: "Customers"
     }
 ]
 

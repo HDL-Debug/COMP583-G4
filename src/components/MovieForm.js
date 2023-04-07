@@ -49,6 +49,7 @@ function MovieForm (props) {
             // Dashboard.js and pass it forward to the Banner and then this component
             // through props.
         }
+        props.doMount.current = true; // This will force the parent DOM to remount.
         handleClose();
     }
 
@@ -76,10 +77,11 @@ function MovieForm (props) {
                 name="title"
                 value={entry.title}
                 onChange={handleEntryChange}
-            />
+            /><br />
             <TextField
                 multiline
                 required
+                rows={4}
                 maxRows={4}
                 id="outlined-required"
                 label="Required"

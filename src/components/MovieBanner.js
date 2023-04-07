@@ -24,7 +24,7 @@ const styles = {
     }
 }
 
-function MovieBanner (props) {
+const MovieBanner = (props) => {
     const [openDelete, setOpenDelete] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
 
