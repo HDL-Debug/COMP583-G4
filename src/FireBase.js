@@ -1,7 +1,9 @@
-import firebase from 'firebase/compat/app'
-import 'firebase/compat/auth'
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 
-const app = firebase.initializeApp ({
+// Your web app's Firebase configuration, replace it with your project keys
+const firebaseConfig = {
   apiKey: "AIzaSyDBrzZfX5BJJEPQpUxBmaFDNAY23k-I1oc",
   authDomain: "comp-598-g4.firebaseapp.com",
   projectId: "comp-598-g4",
@@ -9,7 +11,10 @@ const app = firebase.initializeApp ({
   messagingSenderId: "850825401729",
   appId: "1:850825401729:web:b3119a0210be2732b68480",
   measurementId: "G-3B9HL2STSG"
-})
+};
 
-export const auth = app.auth()
-export default app
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+// Initialize Firebase Authentication and get a reference to the service
+export const auth = getAuth(app);
