@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import "react-dom"
+import "react-dom";
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
@@ -11,7 +11,7 @@ import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-require('dotenv').config()
+require('dotenv').config();
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -25,13 +25,6 @@ const firebaseConfig = {
   appId: "1:850825401729:web:b3119a0210be2732b68480",
   measurementId: "G-3B9HL2STSG"
 };
-
-ReactDOM.render(
-  <React.StrictMode>
-    <App / >
-  </React.StrictMode>,
-  document.getElementById("root")
-)
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

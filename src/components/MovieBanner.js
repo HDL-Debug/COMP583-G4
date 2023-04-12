@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CardMedia, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import { CardMedia, CardActionArea, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 import { Delete, Create } from '@mui/icons-material';
 import MovieForm from './MovieForm';
 
@@ -47,6 +47,7 @@ const MovieBanner = (props) => {
 
     return <div>
         <div style={styles.banner_container}>
+            <CardActionArea>
             <CardMedia
                 sx={{
                     width: '100%',
@@ -65,6 +66,7 @@ const MovieBanner = (props) => {
                     </div>
                 </div>
             </CardMedia>
+            </CardActionArea>
         </div>
         <Dialog
             open={openDelete}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { collection, getDocs } from "firebase/firestore";
+import { getFirestore } from 'firebase/firestore';
 import { Button } from '@mui/material';
 import Navbar from '../components/Navbar';
 import MovieForm from '../components/MovieForm';
@@ -27,10 +28,12 @@ function Dashboard (props) {
     const [movies, setMovies] = useState([]);
     const [open, setOpen] = useState(false);
 
+    const db = getFirestore();
+
     useEffect(() => {
         if (doMount) {
             console.log("Dashboard is fetching!")
-            fetchCollection(props.db, "Movies", setMovies);
+            fetchCollection(db, "Movies", setMovies);
             doMount.current = false;
         }
     }, []);

@@ -27,20 +27,20 @@ function MovieForm (props) {
 
     useEffect(() => {
         // This will run every time this opens or closes.
-        if (variant == "edit")
+        if (variant === "edit")
             setEntry(props.currentData);
     }, [props.open]);
 
     const handleClose = () => {
         props.setOpen(false);
-        if (variant == "add")
+        if (variant === "add")
             setEntry(defaultEntry);
     }
 
     const handleAdd = () => {
         console.log(entry);
         // Add the entry to the database here.
-        if (variant == "add") {
+        if (variant === "add") {
             // Code for adding a new entry to the database here.
         }
         else {
