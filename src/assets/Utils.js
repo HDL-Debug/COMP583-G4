@@ -36,3 +36,11 @@ export const provideAll = (dictionary, defaults=basicDefaults) => {
     }
     return results;
 }
+
+export const handleEntryChange = (e, entry, setEntry) => {
+    const { name, value } = e.target;
+    setEntry({
+        ...entry,
+        [name]: value
+    });
+};

@@ -8,54 +8,39 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import { useLocation } from "react-router-dom";
 
-import { provide } from "../assets/Utils";
+import { getFirestore, updateDoc, doc } from 'firebase/firestore';
 
-const defaults = {
-    _id: undefined,
-    title: "Title Failed to Load",
-    description: "The movie description, and potentially other information has failed to load. Please return to the dashboard if you see this message.",
-    showtimes: [],
-    durationHours: 0,
-    durationMinutes: 0
-};
+import { provideAll, handleEntryChange, findMovie } from "../assets/Utils";
 
 // Showtime Structure
 // {
 // --day: int
 // --month: int
 // --year: int
-// --tickets: int
+// --seats: int
 // --startHour: int
 // --startMinute: int
 // }
 // startHour and startMinute are in military time.
 
 const MovieInstance = (props) => {
+    const now = dayjs();
     const location = useLocation().state;
 
-    const [info, setInfo] = useState({
-        _id: provide(location, defaults, "_id"),
-        title: provide(location, defaults, "title"),
-        description: provide(location, defaults, "description"),
-        showtimes: provide(location, defaults, "showtimes"),
-        durationHours: provide(location, defaults, "durationHours"),
-        durationMinutes: provide(location, defaults, "durationMinutes")
-    });
-    const [entry, setEntry] = useState({
-        seats: 0,
-        startHour: 0,
-        startMinute: 0,
-    });
+    const db = getFirestore();
 
-    const handleEntryChange = (e) => {
-        const { name, value } = e.target;
-        setEntry({
-            ...entry,
-            [name]: value
-        });
-    };
+    const [info, setInfo] = useState(provideAll(location));
+    const [entry, setEntry] = useState({
+        day: now.$D,
+        month: now.$M,
+        year: now.$y,
+        seats: 1,
+        startHour: now.$H,
+        startMinute: now.$m,
+    });
 
     const addShowtime = () => {
+        /*
         let endHour = entry.startHour + info.durationHours;
         let endMinute = entry.startMinute + info.durationMinutes;
         for (let showtime in info.showtimes) {
@@ -68,17 +53,51 @@ const MovieInstance = (props) => {
                 }
             }
             else if (entry.startHour < showtimeEndHour) {
-                // Brain moment.
             }
         }
+        */
         // Otherwise add to the stuff.
+        let newShowtimes = JSON.parse(JSON.stringify(info.showtimes));
+        newShowtimes = newShowtimes === 1 ? [] : newShowtimes;
+        newShowtimes.push(entry);
+        findMovie(db, "Movies", info.title).then((movieID) => {
+            console.log(movieID);
+            if (movieID) {
+                console.log(movieID);
+                updateDoc(doc(db, "Movies", movieID), {
+                    showtimes: newShowtimes,
+                });
+            }
+        });
+        setInfo({
+            ...info,
+            showtimes: newShowtimes,
+        });
     }
 
+    const handleDateChange = (e) => {
+        setEntry({
+            ...entry,
+            day: e.$D,
+            month: e.$M,
+            year: e.$y,
+        });
+    }
+
+    const handleTimeChange = (e) => {
+        setEntry({
+            ...entry,
+            startHour: e.$H,
+            startMinute: e.$m,
+        });
+    }
+
+    let i = 0;
     let jsx = <Typography>No showtimes to show.</Typography>;
     if (info.showtimes.length > 0) {
         jsx = [];
         info.showtimes.forEach((e) => {
-            jsx.push(<div><Typography>{e.tickets} {e.startHour}:{e.startMinute}</Typography></div>);
+            jsx.push(<Typography key={"s" + (++i)}>{e.seats} {e.month}/{e.day}/{e.year} {e.startHour}:{e.startMinute}</Typography>);
         });
     };
 
@@ -92,13 +111,17 @@ const MovieInstance = (props) => {
         <div style={{display: "flex"}}>
             <div style={{flex: 0.55}}>
                 <div style={{width: "fit-content", marginLeft: "auto"}}>
-                    <DateCalendar />
+                    <DateCalendar 
+                        onChange={handleDateChange}
+                    />
                 </div>
             </div>
             <Divider flexItem={true} orientation="vertical" variant="middle" />
             <div style={{flex: 0.45, textAlign: "left"}}>
                 <Typography>Showtimes</Typography>
-                {jsx}
+                <div>
+                    {jsx}
+                </div>
                 <br />
                 <div>
                     <TextField
@@ -108,10 +131,10 @@ const MovieInstance = (props) => {
                         name="seats"
                         type="number"
                         value={entry.seats}
-                        onChange={handleEntryChange}
+                        onChange={(e) => handleEntryChange(e, entry, setEntry)}
                     />
-                    <MobileTimePicker defaultValue={dayjs('2022-04-17T15:30')} onChange={(e) => console.log(e)}/>
-                    <Button variant="contained" onClick={() => console.log("Button Press")}>Add Showtime</Button>
+                    <MobileTimePicker defaultValue={now} onChange={handleTimeChange} ampm={false}/>
+                    <Button variant="contained" onClick={addShowtime}>Add Showtime</Button>
                 </div>
             </div>
         </div>

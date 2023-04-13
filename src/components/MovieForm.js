@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from '@mui/material';
-import { getFirestore, collection, addDoc, setDoc, doc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, updateDoc, doc } from 'firebase/firestore';
 
-import { provide, findMovie } from "../assets/Utils";
+import { provide, findMovie, provideAll } from "../assets/Utils";
 
 const styles = {
     title_field: {
@@ -26,7 +26,7 @@ const defaults = {
 function MovieForm (props) {
     const variant = props.variant ? props.variant : "add";
 
-    const data = props.data ? props.data : {};
+    const data = provideAll(props.data ? props.data : {});
 
     const [entry, setEntry] = useState({
         title: provide(data, defaults, "title"),
@@ -38,7 +38,7 @@ function MovieForm (props) {
     useEffect(() => {
         // This will run every time this opens or closes.
         if (variant === "edit")
-            setEntry(props.currentData);
+            setEntry(data);
     }, [props.open]);
 
     const handleClose = () => {
@@ -64,19 +64,15 @@ function MovieForm (props) {
             // If a reference to the ID is needed might be able to get this back in
             // Dashboard.js and pass it forward to the Banner and then this component
             // through props.
-            findMovie(db, "Movies", props.data.title).then((movieID) => {
+            findMovie(db, "Movies", data.title).then((movieID) => {
                 if (movieID) {
-                    setDoc(collection(db, "Movies", movieID), {
+                    updateDoc(doc(db, "Movies", movieID), {
                         title: entry.title,
                         description: entry.description,
-                        showtimes: props.data.showtimes,
-                        durationHours: props.data.durationHours,
-                        durationMinutes: props.data.durationMinutes,
                     }).then(() => props.forceUpdate());
                 }
             });
         }
-        props.doMount.current = true; // This will force the parent DOM to remount.
         handleClose();
     }
 
@@ -108,8 +104,7 @@ function MovieForm (props) {
             <TextField
                 multiline
                 required
-                rows={4}
-                maxRows={4}
+                minRows={4}
                 id="outlined-required"
                 label="Required"
                 style={styles.description_field}

@@ -54,7 +54,7 @@ const MovieBanner = (props) => {
 
     return <div>
         <div style={styles.banner_container}>
-            <CardActionArea onClick={() => navigate("../movie", {state: {title: data.title, description: data.description}})}>
+            <CardActionArea onClick={() => navigate("../movie", {state: data})}>
             <CardMedia
                 sx={{
                     width: '100%',
@@ -111,12 +111,10 @@ const MovieBanner = (props) => {
         </Dialog>
         <MovieForm 
             variant="edit"
-            currentData={{
-                title: data.title, 
-                description: data.description
-            }}
+            data={data}
             open={openEdit}
             setOpen={setOpenEdit}
+            forceUpdate={props.forceUpdate}
         />
     </div>;
 }
