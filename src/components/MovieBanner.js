@@ -3,6 +3,12 @@ import { CardMedia, CardActionArea, IconButton, Dialog, DialogActions, DialogCon
 import { Delete, Create } from '@mui/icons-material';
 import MovieForm from './MovieForm';
 
+import { useNavigate } from "react-router-dom";
+
+import { doc, deleteDoc, getFirestore } from "firebase/firestore";
+
+import { findMovie, provideAll } from "../assets/Utils";
+
 // Consider using CardMedia for background image
 
 const styles = {
@@ -28,26 +34,27 @@ const MovieBanner = (props) => {
     const [openDelete, setOpenDelete] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
 
-    const handleOpenDelete = () => {
-        setOpenDelete(true);
-    }
+    const data = provideAll(props.data ? props.data : {});
 
-    const handleOpenEdit = () => {
-        setOpenEdit(true);
-    }
+    const navigate = useNavigate();
+    const db = getFirestore();
 
     const handleClose = (deleteMovie) => {
         if (deleteMovie) {
             // Handle removing the movie here.
             // Remove it from the database.
-            console.log(props.title + " was removed.");
+            findMovie(db, "Movies", data.title).then((movieID) => {
+                if (movieID) {
+                    deleteDoc(doc(db, "Movies", movieID)).then(() => console.log(data.title + " was removed.")).then(() => props.forceUpdate());
+                }
+            });
         }
         setOpenDelete(false);
     }
 
     return <div>
         <div style={styles.banner_container}>
-            <CardActionArea>
+            <CardActionArea onClick={() => navigate("../movie", {state: {title: data.title, description: data.description}})}>
             <CardMedia
                 sx={{
                     width: '100%',
@@ -59,10 +66,26 @@ const MovieBanner = (props) => {
                 image="https://img.freepik.com/free-vector/online-cinema-banner-with-open-clapper-board-film-strip_1419-2242.jpg"
             >
                 <div style={styles.banner_inner_content}>
-                    <p style={{paddingTop: 15, paddingLeft: 10, size: 20, fontSize: 22}}>{props.title}</p>
+                    <p style={{paddingTop: 15, paddingLeft: 10, size: 20, fontSize: 22}}>{data.title}</p>
                     <div style={{marginTop: 15, marginLeft: "auto"}}>
-                        <IconButton style={{marginRight: 5}} onClick={handleOpenDelete}><Delete sx={styles.icon}/></IconButton>
-                        <IconButton style={{marginRight: 5}} onClick={handleOpenEdit}><Create sx={styles.icon}/></IconButton>
+                        <IconButton 
+                            style={{marginRight: 5}}
+                            onMouseDown={(event) => event.stopPropagation()}
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                event.preventDefault();
+                                setOpenDelete(true);
+                            }}
+                        ><Delete sx={styles.icon}/></IconButton>
+                        <IconButton 
+                            style={{marginRight: 5}} 
+                            onMouseDown={(event) => event.stopPropagation()}
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                event.preventDefault();
+                                setOpenEdit(true);
+                            }}
+                        ><Create sx={styles.icon}/></IconButton>
                     </div>
                 </div>
             </CardMedia>
@@ -77,7 +100,7 @@ const MovieBanner = (props) => {
             </DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Are you sure you would like to delete the movie named {props.title}?
+                    Are you sure you would like to delete the movie named {data.title}?
                     Doing so will remove it completely and this action cannot be undone.
                 </DialogContentText>
             </DialogContent>
@@ -89,8 +112,8 @@ const MovieBanner = (props) => {
         <MovieForm 
             variant="edit"
             currentData={{
-                title: props.title, 
-                description: props.description
+                title: data.title, 
+                description: data.description
             }}
             open={openEdit}
             setOpen={setOpenEdit}

@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from '@mui/material';
+import { getFirestore, collection, addDoc, setDoc, doc } from 'firebase/firestore';
+
+import { provide, findMovie } from "../assets/Utils";
 
 const styles = {
     title_field: {
@@ -10,7 +13,7 @@ const styles = {
     }
 };
 
-const defaultEntry = {
+const defaults = {
     title: "Movie Title",
     description: "Movie Description"
 }
@@ -21,9 +24,16 @@ const defaultEntry = {
 // open
 // setOpen
 function MovieForm (props) {
-    let variant = props.variant;
-    if (variant == undefined) variant = "add";
-    const [entry, setEntry] = useState((variant == "add") ? defaultEntry : props.currentData);
+    const variant = props.variant ? props.variant : "add";
+
+    const data = props.data ? props.data : {};
+
+    const [entry, setEntry] = useState({
+        title: provide(data, defaults, "title"),
+        description: provide(data, defaults, "description"),
+    });
+
+    const db = getFirestore();
 
     useEffect(() => {
         // This will run every time this opens or closes.
@@ -34,20 +44,37 @@ function MovieForm (props) {
     const handleClose = () => {
         props.setOpen(false);
         if (variant === "add")
-            setEntry(defaultEntry);
+            setEntry(defaults);
     }
 
     const handleAdd = () => {
-        console.log(entry);
         // Add the entry to the database here.
         if (variant === "add") {
             // Code for adding a new entry to the database here.
+            addDoc(collection(db, "Movies"), {
+                title: entry.title,
+                description: entry.description,
+                showtimes: [],
+                durationHours: 0,
+                durationMinutes: 0,
+            }).then(() => props.forceUpdate());
         }
         else {
             // Code for editing an existing entry to the database here.
             // If a reference to the ID is needed might be able to get this back in
             // Dashboard.js and pass it forward to the Banner and then this component
             // through props.
+            findMovie(db, "Movies", props.data.title).then((movieID) => {
+                if (movieID) {
+                    setDoc(collection(db, "Movies", movieID), {
+                        title: entry.title,
+                        description: entry.description,
+                        showtimes: props.data.showtimes,
+                        durationHours: props.data.durationHours,
+                        durationMinutes: props.data.durationMinutes,
+                    }).then(() => props.forceUpdate());
+                }
+            });
         }
         props.doMount.current = true; // This will force the parent DOM to remount.
         handleClose();
