@@ -26,7 +26,8 @@ const basicDefaults = {
     description: "The movie description, and potentially other information has failed to load. Please return to the dashboard if you see this message.",
     showtimes: [],
     durationHours: 0,
-    durationMinutes: 0
+    durationMinutes: 0,
+    img: ""
 };
 
 export const provideAll = (dictionary, defaults=basicDefaults) => {

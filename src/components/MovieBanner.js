@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CardMedia, CardActionArea, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import { CardMedia, CardActionArea, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Typography } from '@mui/material';
 import { Delete, Create } from '@mui/icons-material';
 import MovieForm from './MovieForm';
 
@@ -52,7 +52,7 @@ const MovieBanner = (props) => {
         setOpenDelete(false);
     }
 
-    return <div>
+    return <>
         <div style={styles.banner_container}>
             <CardActionArea onClick={() => navigate("../movie", {state: data})}>
             <CardMedia
@@ -61,12 +61,13 @@ const MovieBanner = (props) => {
                     height: 100,
                     ':hover': {
                         boxShadow: 20, // theme.shadows[20]
-                    }
+                    },
+                    borderRadius: 2
                 }}
-                image="https://img.freepik.com/free-vector/online-cinema-banner-with-open-clapper-board-film-strip_1419-2242.jpg"
+                image={data.img}
             >
                 <div style={styles.banner_inner_content}>
-                    <p style={{paddingTop: 15, paddingLeft: 10, size: 20, fontSize: 22}}>{data.title}</p>
+                    <Typography variant="h4" style={{paddingTop: 15, paddingLeft: 10}}>{data.title}</Typography>
                     <div style={{marginTop: 15, marginLeft: "auto"}}>
                         <IconButton 
                             style={{marginRight: 5}}
@@ -116,7 +117,7 @@ const MovieBanner = (props) => {
             setOpen={setOpenEdit}
             forceUpdate={props.forceUpdate}
         />
-    </div>;
+    </>;
 }
 
 export default MovieBanner;

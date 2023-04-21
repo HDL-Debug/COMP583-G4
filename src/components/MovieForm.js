@@ -15,7 +15,8 @@ const styles = {
 
 const defaults = {
     title: "Movie Title",
-    description: "Movie Description"
+    description: "Movie Description",
+    img: "https://img.freepik.com/free-vector/online-cinema-banner-with-open-clapper-board-film-strip_1419-2242.jpg"
 }
 
 // Props
@@ -31,6 +32,7 @@ function MovieForm (props) {
     const [entry, setEntry] = useState({
         title: provide(data, defaults, "title"),
         description: provide(data, defaults, "description"),
+        img: provide(data, defaults, "img")
     });
 
     const db = getFirestore();
@@ -57,6 +59,7 @@ function MovieForm (props) {
                 showtimes: [],
                 durationHours: 0,
                 durationMinutes: 0,
+                img: entry.img
             }).then(() => props.forceUpdate());
         }
         else {
@@ -110,6 +113,15 @@ function MovieForm (props) {
                 style={styles.description_field}
                 name="description"
                 value={entry.description}
+                onChange={handleEntryChange}
+            /><br />
+            <TextField
+                required
+                id="outlined-required"
+                label="Required"
+                style={styles.title_field}
+                name="img"
+                value={entry.img}
                 onChange={handleEntryChange}
             />
         </DialogContent>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Navbar from '../components/Navbar';
 import dayjs from 'dayjs';
 import { Typography, Divider, TextField, Button } from '@mui/material';
@@ -24,8 +24,11 @@ import { provideAll, handleEntryChange, findMovie } from "../assets/Utils";
 // startHour and startMinute are in military time.
 
 const MovieInstance = (props) => {
-    const now = dayjs();
+    const nowRef = useRef(dayjs());
+
+    const now = nowRef.current;
     const location = useLocation().state;
+
 
     const db = getFirestore();
 
@@ -93,32 +96,58 @@ const MovieInstance = (props) => {
     }
 
     let i = 0;
-    let jsx = <Typography>No showtimes to show.</Typography>;
+    let jsx = <Typography>No showtimes in records.</Typography>;
     if (info.showtimes.length > 0) {
         jsx = [];
-        info.showtimes.forEach((e) => {
+        info.showtimes.filter((e) => {
+            return (e.month === entry.month) && (e.day === entry.day) && (e.year === entry.year);
+        }).forEach((e) => {
             jsx.push(<Typography key={"s" + (++i)}>{e.seats} {e.month}/{e.day}/{e.year} {e.startHour}:{e.startMinute}</Typography>);
         });
+        if (jsx.length === 0) {
+            jsx = <Typography>No showtimes in records.</Typography>;
+        }
     };
 
     return <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Navbar />
-        <Typography
-            variant="h2"
-        >{info.title}</Typography>
-        <Typography>{info.description}</Typography>
-        <Divider variant="middle" />
-        <div style={{display: "flex"}}>
-            <div style={{flex: 0.55}}>
+        <div style={{
+            backgroundColor: "rgb(231, 235, 240, 0.7)",
+            margin: 10,
+            borderRadius: 5,
+            padding: 5
+        }}>
+            <Typography
+                variant="h2"
+            >{info.title}</Typography>
+            <Typography>{info.description}</Typography>
+        </div>
+        <Divider variant="middle" sx={{ borderBottomWidth: 2 }}/>
+        <div style={{
+            display: "flex",
+        }}>
+            <div style={{flex: 0.5}}>
                 <div style={{width: "fit-content", marginLeft: "auto"}}>
                     <DateCalendar 
                         onChange={handleDateChange}
+                        style={{
+                            backgroundColor: "rgb(231, 235, 240, 0.7)",
+                            margin: 10,
+                            borderRadius: 5
+                        }}
                     />
                 </div>
             </div>
-            <Divider flexItem={true} orientation="vertical" variant="middle" />
-            <div style={{flex: 0.45, textAlign: "left"}}>
-                <Typography>Showtimes</Typography>
+            <Divider flexItem={true} orientation="vertical" variant="middle" sx={{ borderRightWidth: 2 }}/>
+            <div style={{
+                flex: 0.5, 
+                textAlign: "left", 
+                backgroundColor: "rgb(231, 235, 240, 0.7)",
+                margin: 10,
+                borderRadius: 5,
+                padding: 5
+            }}>
+                <Typography variant="h3">Showtimes</Typography>
                 <div>
                     {jsx}
                 </div>
@@ -132,9 +161,16 @@ const MovieInstance = (props) => {
                         type="number"
                         value={entry.seats}
                         onChange={(e) => handleEntryChange(e, entry, setEntry)}
+                        style={{
+                            height: 40,
+                            marginRight: 5
+                        }}
                     />
                     <MobileTimePicker defaultValue={now} onChange={handleTimeChange} ampm={false}/>
-                    <Button variant="contained" onClick={addShowtime}>Add Showtime</Button>
+                    <Button variant="contained" onClick={addShowtime} style={{
+                        marginLeft: 5,
+                        height: 55
+                    }}>Add Showtime</Button>
                 </div>
             </div>
         </div>

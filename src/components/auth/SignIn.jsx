@@ -21,11 +21,19 @@ const SignIn = () => {
   };
 
   return (
-    <div className="sign-in-container" >
+    <div style={{
+      backgroundColor: "rgb(231, 235, 240, 0.7)",
+      borderRadius: 5,
+      paddingTop: 5,
+      paddingBottom: 5,
+      marginTop: 10,
+      width: "30%",
+      marginLeft: "35%",
+    }}>
       <form onSubmit={signIn}>
         <h1>Log into your Account</h1>
-        <div className="flex flex-col py-2">
-        <input className="border p-3"
+        <div>
+        <input 
           type="email"
           placeholder="Enter your email"
           value={email}
@@ -33,7 +41,7 @@ const SignIn = () => {
         ></input>
         </div>
 
-        <div className="flex flex-col py-2">
+        <div>
         <input
           type="password"
           placeholder="Enter your password"
@@ -43,7 +51,7 @@ const SignIn = () => {
         </div>
       
         <button type="submit">Log In</button>
-        <p className="py-2">
+        <p>
           Don't have an account yet? <Link to='signup' className='underline'>Sign Up.</Link>
         </p>
       </form>

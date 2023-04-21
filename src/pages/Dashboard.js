@@ -63,7 +63,7 @@ function Dashboard (props) {
             doMount={doMount}
             forceUpdate={forceUpdate}
         />
-    </>;
+    </>
 }
 
 export default Dashboard;
