@@ -40,7 +40,7 @@ const SignIn = () => {
           onChange={(e) => setEmail(e.target.value)}
         ></input>
         </div>
-
+        
         <div>
         <input
           type="password"
@@ -49,7 +49,7 @@ const SignIn = () => {
           onChange={(e) => setPassword(e.target.value)}
         ></input>
         </div>
-      
+
         <button type="submit">Log In</button>
         <p>
           Don't have an account yet? <Link to='signup' className='underline'>Sign Up.</Link>

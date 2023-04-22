@@ -5,6 +5,7 @@ import { Button } from '@mui/material';
 import Navbar from '../components/Navbar';
 import MovieForm from '../components/MovieForm';
 import MovieBanner from '../components/MovieBanner';
+import { fetchCollection } from '../assets/Utils';
 
 const styles = {
     add_button: {
@@ -16,12 +17,6 @@ const styles = {
         width: '80%'
     }
 };
-
-const fetchCollection = async (db, collectionName, setData) => {
-    const querySnapshot = await getDocs(collection(db, collectionName));
-    setData(querySnapshot.docs);
-};
-// MovieName, MovieDescription
 
 function Dashboard (props) {
     const doMount = useRef(true);
@@ -36,7 +31,6 @@ function Dashboard (props) {
 
     useEffect(() => {
         if (doMount) {
-            console.log("Dashboard is fetching!")
             fetchCollection(db, "Movies", setMovies);
             doMount.current = false;
         }
