@@ -4,11 +4,14 @@ import Dashboard from "./pages/Dashboard";
 import MovieInstance from "./pages/MovieInstance";
 import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
+import ForgotPassword from "./components/ForgotPassword";
 import AuthDetails from './components/AuthDetails';
+import Customers from "./pages/Customers";
 import { ThemeProvider } from '@mui/material/styles';
 
 import theme from './assets/Colors';
 import './App.css';
+
 
 function App(props) {
   return (<ThemeProvider theme={theme}>
@@ -25,6 +28,8 @@ function App(props) {
           <Route path='/profilepage' element={<AuthDetails/>}/>
           <Route path='/dashboard' element={<Dashboard/>}/>
           <Route path='/movie' element={<MovieInstance/>}/>
+          <Route path='/customers' element={<Customers/>}/>
+          <Route path='/forgotpassword' element={<ForgotPassword/>}/>
         </Routes>
       </div>
     </div>

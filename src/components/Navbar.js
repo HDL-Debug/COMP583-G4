@@ -16,7 +16,11 @@ const navs = [
     },
     {
         name: "Customers",
-        nav: "../dashboard"
+        nav: "../customers"
+    },
+    {
+        name: "Profile",
+        nav: "../profilepage"
     }
 ]
 
