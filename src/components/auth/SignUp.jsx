@@ -1,6 +1,7 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { collection, addDoc } from "firebase/firestore";
 import React, { useState } from "react";
-import { auth } from "../../firebase";
+import { auth, firestore } from "../../firebase";
 import { Link, useNavigate } from "react-router-dom";
 
 const SignUp = () => {
@@ -8,16 +9,23 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const navigte = useNavigate();
 
-  const signUp = (e) => {
+  const signUp = async (e) => {
     e.preventDefault();
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log(userCredential)
-        navigte ('/dashboard');
-      })
-      .catch((error) => {
-        console.log(error);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      await addDoc(collection(firestore, "users"), {
+        uid: userCredential.user.uid,
+        role: "customer", // changed role value to customer
       });
+      console.log(userCredential);
+      navigte("/dashboard");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

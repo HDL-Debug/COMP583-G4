@@ -1,20 +1,34 @@
 import { onAuthStateChanged, sendPasswordResetEmail, signOut, updateEmail } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import Navbar from '../components/Navbar';
+import { collection, doc, getDoc } from "firebase/firestore";
 
 const AuthDetails = () => {
   const [authUser, setAuthUser] = useState(null);
   const [newEmail, setNewEmail] = useState('');
+  const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
   
   useEffect(() => {
     const listen = onAuthStateChanged(auth, (user) => {
       if (user) {
         setAuthUser(user);
+        getDoc(doc(collection(db, "users"), user.uid))
+          .then((doc) => {
+            if (doc.exists()) {
+              setUserRole(doc.data().role);
+            } else {
+              console.log("No such document!");
+            }
+          })
+          .catch((error) => {
+            console.log("Error getting document:", error);
+          });
       } else {
         setAuthUser(null);
+        setUserRole(null);
       }
     });
 
@@ -77,6 +91,7 @@ const AuthDetails = () => {
         {authUser ? (
           <>
             <p>{`Currently logged in user: ${authUser.email}`}</p>
+            <p>{`User role: ${userRole}`}</p>
             <div>
               <label htmlFor="newEmail">New Email:</label>
               <input type="email" id="newEmail" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} />

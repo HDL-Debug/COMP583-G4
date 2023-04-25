@@ -11,6 +11,7 @@ import { ThemeProvider } from '@mui/material/styles';
 
 import theme from './assets/Colors';
 import './App.css';
+import DashboardCustomer from "./pages/DashboardCustomer";
 
 
 function App(props) {
@@ -30,6 +31,7 @@ function App(props) {
           <Route path='/movie' element={<MovieInstance/>}/>
           <Route path='/customers' element={<Customers/>}/>
           <Route path='/forgotpassword' element={<ForgotPassword/>}/>
+          <Route path='/dashboardcustomer' element={<DashboardCustomer/>}/>
         </Routes>
       </div>
     </div>
