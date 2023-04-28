@@ -2,10 +2,10 @@ import { onAuthStateChanged, sendPasswordResetEmail, signOut, updateEmail } from
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
 import { useNavigate } from "react-router-dom";
-import Navbar from '../components/Navbar';
+import NavbarCustomer from './NavbarCustomer';
 import { collection, doc, getDoc } from "firebase/firestore";
 
-const AuthDetails = () => {
+const AuthDetailsCustomer = () => {
   const [authUser, setAuthUser] = useState(null);
   const [newEmail, setNewEmail] = useState('');
   const [userRole, setUserRole] = useState(null);
@@ -85,7 +85,7 @@ const AuthDetails = () => {
 
   return (
     <>
-      <Navbar />
+      <NavbarCustomer />
       <div style={{ backgroundColor: 'white', width: 'fit-content', margin: 'auto', padding: '20px', borderRadius: '5px' }}>
         <h1 className='text-center text-3xl font-bold'>Account Information</h1>
         {authUser ? (
@@ -108,5 +108,5 @@ const AuthDetails = () => {
   );
 };
 
-export default AuthDetails;
+export default AuthDetailsCustomer;
 
