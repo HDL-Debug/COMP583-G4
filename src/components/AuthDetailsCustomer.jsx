@@ -3,19 +3,22 @@ import React, { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import NavbarCustomer from './NavbarCustomer';
-import { collection, doc, getDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getFirestore } from "firebase/firestore";
+import { findUser } from "../assets/Utils";
 
 const AuthDetailsCustomer = () => {
   const [authUser, setAuthUser] = useState(null);
   const [newEmail, setNewEmail] = useState('');
   const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
+  const db = getFirestore();
   
   useEffect(() => {
     const listen = onAuthStateChanged(auth, (user) => {
       if (user) {
         setAuthUser(user);
-        getDoc(doc(collection(db, "users"), user.uid))
+        findUser(db, user.uid).then((userID) => {
+          getDoc(doc(collection(db, "users"), userID))
           .then((doc) => {
             if (doc.exists()) {
               setUserRole(doc.data().role);
@@ -26,6 +29,10 @@ const AuthDetailsCustomer = () => {
           .catch((error) => {
             console.log("Error getting document:", error);
           });
+
+        })
+        
+        
       } else {
         setAuthUser(null);
         setUserRole(null);
