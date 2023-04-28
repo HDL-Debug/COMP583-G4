@@ -13,7 +13,7 @@ const SignIn = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         console.log(userCredential)
-        navigte('/dashboard');
+        navigte('/dashboardcustomer');
       })
       .catch((error) => {
         console.log(error);

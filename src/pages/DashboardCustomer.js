@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useReducer } from 'react';
 import { collection, getDocs } from "firebase/firestore";
 import { getFirestore } from 'firebase/firestore';
 import { Button } from '@mui/material';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/NavbarCustomer';
 import MovieBanner from '../components/MovieBanner';
 
 const styles = {

@@ -6,6 +6,7 @@ import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
 import ForgotPassword from "./components/ForgotPassword";
 import AuthDetails from './components/AuthDetails';
+import AuthDetailsCustomer from "./components/AuthDetailsCustomer";
 import Customers from "./pages/Customers";
 import { ThemeProvider } from '@mui/material/styles';
 
@@ -27,6 +28,7 @@ function App(props) {
           <Route path='/' element={<SignIn/>}/>
           <Route path='/signup' element={<SignUp/>}/>
           <Route path='/profilepage' element={<AuthDetails/>}/>
+          <Route path='/profilepagecustomer' element={<AuthDetailsCustomer/>}/>
           <Route path='/dashboard' element={<Dashboard/>}/>
           <Route path='/movie' element={<MovieInstance/>}/>
           <Route path='/customers' element={<Customers/>}/>
