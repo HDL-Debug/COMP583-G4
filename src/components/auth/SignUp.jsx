@@ -12,6 +12,11 @@ const SignUp = () => {
 
   const signUp = async (e) => {
     e.preventDefault();
+    e.preventDefault();
+    if (!email || !password) { // check if email and password are not empty
+      alert("Please enter both email and password."); // show alert if either of them is empty
+      return;
+    }
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -25,7 +30,7 @@ const SignUp = () => {
         lastLogin: now.toISOString() // add a new field to track last login time
       });
       console.log(userCredential);
-      navigte("/dashboard");
+      navigte("/dashboardcustomer");
     } catch (error) {
       console.log(error);
     }
