@@ -16,6 +16,17 @@ export const findMovie = async (db, collectionName, title) => {
     return undefined;
 }
 
+// Find a user by the uid and get the ID.
+export const findUser = async (db, uid) => {
+    const querySnapshot = await getDocs(collection(db, "users"));
+    const snapshots = querySnapshot.docs;
+    for (let i in snapshots) {
+        if (snapshots[i].data().uid === uid)
+            return snapshots[i].id;
+    }
+    return undefined;
+}
+
 export const provide = (dictionary, defaults, name) => {
     return (dictionary[name] ? dictionary[name] : defaults[name]);
 }

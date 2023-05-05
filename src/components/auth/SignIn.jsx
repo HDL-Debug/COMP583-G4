@@ -2,23 +2,41 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { auth } from "../../firebase";
 import { Link, useNavigate } from "react-router-dom";
+import { collection, doc, getDoc, getFirestore } from "firebase/firestore";
+import { findUser } from "../../assets/Utils";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigte = useNavigate();
+  const db = getFirestore();
+  const user = signInWithEmailAndPassword(auth, email, password);
 
   const signIn = async (e) => {
     e.preventDefault();
+
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log(userCredential)
-        navigte('/dashboardcustomer');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+        .then(async (userCredential) => {
+            const userID = await findUser(db, userCredential.user.uid);
+            getDoc(doc(collection(db, "users"), userID))
+                .then((doc) => {
+                    if(doc.data().role === "customer"){
+                        navigte('/dashboardcustomer');
+                        console.log(userCredential);
+                    } else {
+                        navigte('/dashboard');
+                        console.log(userCredential);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+};
+
 
   return (
     <div style={{

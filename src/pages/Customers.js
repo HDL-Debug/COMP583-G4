@@ -10,7 +10,7 @@ const Customers = () => {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const customersRef = firestore.collection("customers");
+        const customersRef = firestore.collection("users");
         const snapshot = await customersRef.get();
         const customers = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -26,7 +26,7 @@ const Customers = () => {
 
   const refreshTable = async () => {
     try {
-      const customersRef = firestore.collection("customers");
+      const customersRef = firestore.collection("users");
       const snapshot = await customersRef.get();
       if (snapshot.empty) {
         await customersRef.doc("1").set({
@@ -91,19 +91,17 @@ const Customers = () => {
         <table style={{width: "100%", backgroundColor: "white"}}>
           <thead>
             <tr>
-              <th>Provider</th>
-              <th>Identifier</th>
-              <th>Created</th>
-              <th>Signed In</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Last Login</th>
             </tr>
           </thead>
           <tbody>
-            {customers.map((customer) => (
-              <tr key={customer.id}>
-                <td>{customer.provider}</td>
-                <td>{customer.identifier}</td>
-                <td>{customer.created}</td>
-                <td>{customer.signedIn}</td>
+            {customers.map((users) => (
+              <tr key={users.id}>
+                <td>{users.email}</td>
+                <td>{users.role}</td>
+                <td>{users.lastlogin}</td>
               </tr>
             ))}
           </tbody>
