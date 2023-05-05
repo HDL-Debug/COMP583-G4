@@ -12,29 +12,21 @@ const styles = {
 const navs = [
     {
         name: "Dashboard",
-        nav: "../dashboard"
-    },
-    {
-        name: "Timeline",
-        nav: "../timeline"
-    },
-    {
-        name: "Customers",
-        nav: "../customers"
+        nav: "../dashboardcustomer"
     },
     {
         name: "Profile",
-        nav: "../profilepage"
+        nav: "../profilepagecustomer"
     }
 ]
 
-function Navbar (props) {
+function Navbar () {
     const navigate = useNavigate();
 
     return <AppBar position="static">
         <Toolbar>
             <Typography variant="h6">
-                Movie Manager
+                Movie Theater
             </Typography>
             {navs.map(e => <Button color="white" style={styles.nav_button} onClick={() => navigate(e.nav)}>
                 {e.name}

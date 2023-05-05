@@ -2,15 +2,16 @@ import { onAuthStateChanged, sendPasswordResetEmail, signOut, updateEmail } from
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
 import { useNavigate } from "react-router-dom";
-import Navbar from '../components/Navbar';
-import { collection, doc, getDoc } from "firebase/firestore";
+import NavbarCustomer from './NavbarCustomer';
+import { collection, doc, getDoc, getFirestore } from "firebase/firestore";
 import { findUser } from "../assets/Utils";
 
-const AuthDetails = () => {
+const AuthDetailsCustomer = () => {
   const [authUser, setAuthUser] = useState(null);
   const [newEmail, setNewEmail] = useState('');
   const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
+  const db = getFirestore();
   
   useEffect(() => {
     const listen = onAuthStateChanged(auth, (user) => {
@@ -91,7 +92,7 @@ const AuthDetails = () => {
 
   return (
     <>
-  <Navbar />
+  <NavbarCustomer />
   <div style={{ backgroundColor: 'white', width: 'fit-content', margin: 'auto', padding: '20px', borderRadius: '5px' }}>
     <h1 className='text-center text-3xl font-bold'>Account Information</h1>
     {authUser ? (
@@ -103,8 +104,10 @@ const AuthDetails = () => {
           <input type="email" id="newEmail" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} />
           <button className="update-btn" onClick={updateEmailHandler}>Update Email</button>
         </div>
-        <button className="reset-btn" onClick={resetPassword}>Reset Password</button>
-        <button className="sign-out-btn" onClick={userSignOut}>Sign Out</button>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+          <button className="reset-btn" style={{ marginRight: '10px' }} onClick={resetPassword}>Reset Password</button>
+          <button className="sign-out-btn" onClick={userSignOut}>Sign Out</button>
+        </div>
       </>
     ) : (
       <p>Signed Out</p>
@@ -112,10 +115,10 @@ const AuthDetails = () => {
   </div>
   <style>
     {`
-      .update-btn {
-        background-color: #4CAF50;
-        border: none;
-        color: white;
+      .update-btn, .reset-btn, .sign-out-btn {
+        background-color: #fff;
+        border: 2px solid #000;
+        color: #000;
         padding: 10px 20px;
         text-align: center;
         text-decoration: none;
@@ -124,39 +127,26 @@ const AuthDetails = () => {
         margin: 4px 2px;
         cursor: pointer;
         border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      .update-btn:hover, .reset-btn:hover, .sign-out-btn:hover {
+        background-color: #000;
+        color: #fff;
       }
       .reset-btn {
-        background-color: #008CBA;
-        border: none;
-        color: white;
-        padding: 10px 20px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 5px;
+        margin-right: 10px;
       }
-      .sign-out-btn {
-        background-color: #f44336;
-        border: none;
-        color: white;
-        padding: 10px 20px;
+      div[style] {
+        width: 100%;
         text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 5px;
       }
     `}
   </style>
 </>
 
+
   );
 };
 
-export default AuthDetails;
+export default AuthDetailsCustomer;
 
