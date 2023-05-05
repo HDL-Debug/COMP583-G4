@@ -83,7 +83,7 @@ const MovieInstance = (props) => {
         setEntry({
             ...entry,
             day: e.$D,
-            month: e.$M,
+            month: e.$M + 1,
             year: e.$y,
         });
     }
@@ -102,6 +102,8 @@ const MovieInstance = (props) => {
         jsx = [];
         info.showtimes.filter((e) => {
             return (e.month === entry.month) && (e.day === entry.day) && (e.year === entry.year);
+        }).sort((a, b) => {
+            return (a.startHour - b.startHour) + ((a.startMinute - b.startMinute)/60)
         }).forEach((e, index, arr) => {
             jsx.push(<Showtime data={e} key={"s" + (++i)} last={(index + 1) === arr.length}/>);
         });

@@ -6,6 +6,7 @@ import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
 import AuthDetails from './components/AuthDetails';
 import { ThemeProvider } from '@mui/material/styles';
+import MovieTimeline from './pages/MovieTimeline';
 
 import theme from './assets/Colors';
 import './App.css';
@@ -25,6 +26,7 @@ function App(props) {
           <Route path='/profilepage' element={<AuthDetails/>}/>
           <Route path='/dashboard' element={<Dashboard/>}/>
           <Route path='/movie' element={<MovieInstance/>}/>
+          <Route path='/timeline' element={<MovieTimeline/>}/>
         </Routes>
       </div>
     </div>
