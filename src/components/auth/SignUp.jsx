@@ -8,9 +8,15 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigte = useNavigate();
+  const now = new Date();
 
   const signUp = async (e) => {
     e.preventDefault();
+    e.preventDefault();
+    if (!email || !password) { // check if email and password are not empty
+      alert("Please enter both email and password."); // show alert if either of them is empty
+      return;
+    }
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -19,10 +25,12 @@ const SignUp = () => {
       );
       await addDoc(collection(firestore, "users"), {
         uid: userCredential.user.uid,
+        email: userCredential.user.email,
         role: "customer", // changed role value to customer
+        lastLogin: now.toISOString() // add a new field to track last login time
       });
       console.log(userCredential);
-      navigte("/dashboard");
+      navigte("/dashboardcustomer");
     } catch (error) {
       console.log(error);
     }
