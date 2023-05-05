@@ -105,7 +105,7 @@ const MovieInstance = (props) => {
         }).sort((a, b) => {
             return (a.startHour - b.startHour) + ((a.startMinute - b.startMinute)/60)
         }).forEach((e, index, arr) => {
-            jsx.push(<Showtime data={e} key={"s" + (++i)} last={(index + 1) === arr.length}/>);
+            jsx.push(<Showtime data={e} title={info.title} key={"s" + (++i)} last={(index + 1) === arr.length}/>);
         });
         if (jsx.length === 0) {
             jsx = <Typography>No showtimes in records.</Typography>;
