@@ -7,6 +7,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import { useLocation } from "react-router-dom";
+import Showtime from "../components/Showtime";
 
 import { getFirestore, updateDoc, doc } from 'firebase/firestore';
 
@@ -82,7 +83,7 @@ const MovieInstance = (props) => {
         setEntry({
             ...entry,
             day: e.$D,
-            month: e.$M,
+            month: e.$M + 1,
             year: e.$y,
         });
     }
@@ -101,8 +102,10 @@ const MovieInstance = (props) => {
         jsx = [];
         info.showtimes.filter((e) => {
             return (e.month === entry.month) && (e.day === entry.day) && (e.year === entry.year);
-        }).forEach((e) => {
-            jsx.push(<Typography key={"s" + (++i)}>{e.seats} {e.month}/{e.day}/{e.year} {e.startHour}:{e.startMinute}</Typography>);
+        }).sort((a, b) => {
+            return (a.startHour - b.startHour) + ((a.startMinute - b.startMinute)/60)
+        }).forEach((e, index, arr) => {
+            jsx.push(<Showtime data={e} title={info.title} key={"s" + (++i)} last={(index + 1) === arr.length}/>);
         });
         if (jsx.length === 0) {
             jsx = <Typography>No showtimes in records.</Typography>;

@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { CardMedia, CardActionArea, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Typography } from '@mui/material';
+import { CardMedia, CardActionArea, IconButton, Button, Typography } from '@mui/material';
 import { Delete, Create } from '@mui/icons-material';
 import MovieForm from './MovieForm';
+import MovieDelete from './MovieDelete'
 
 import { useNavigate } from "react-router-dom";
-
-import { doc, deleteDoc, getFirestore } from "firebase/firestore";
 
 import { findMovie, provideAll } from "../assets/Utils";
 
@@ -37,20 +36,6 @@ const MovieBanner = (props) => {
     const data = provideAll(props.data ? props.data : {});
 
     const navigate = useNavigate();
-    const db = getFirestore();
-
-    const handleClose = (deleteMovie) => {
-        if (deleteMovie) {
-            // Handle removing the movie here.
-            // Remove it from the database.
-            findMovie(db, "Movies", data.title).then((movieID) => {
-                if (movieID) {
-                    deleteDoc(doc(db, "Movies", movieID)).then(() => console.log(data.title + " was removed.")).then(() => props.forceUpdate());
-                }
-            });
-        }
-        setOpenDelete(false);
-    }
 
     return <>
         <div style={styles.banner_container}>
@@ -92,24 +77,12 @@ const MovieBanner = (props) => {
             </CardMedia>
             </CardActionArea>
         </div>
-        <Dialog
-            open={openDelete}
-            onClose={() => handleClose(false)}
-        >
-            <DialogTitle>
-                {"Confirm Delete"}
-            </DialogTitle>
-            <DialogContent>
-                <DialogContentText>
-                    Are you sure you would like to delete the movie named {data.title}?
-                    Doing so will remove it completely and this action cannot be undone.
-                </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={() => handleClose(true)}>Yes</Button>
-                <Button onClick={() => handleClose(false)} autoFocus>No</Button>
-            </DialogActions>
-        </Dialog>
+        <MovieDelete
+            title={data.title}
+            openDelete={openDelete}
+            setOpenDelete={setOpenDelete}
+            forceUpdate={props.forceUpdate}
+        />
         <MovieForm 
             variant="edit"
             data={data}

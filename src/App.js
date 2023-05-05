@@ -9,6 +9,7 @@ import AuthDetails from './components/AuthDetails';
 import AuthDetailsCustomer from "./components/AuthDetailsCustomer";
 import Customers from "./pages/Customers";
 import { ThemeProvider } from '@mui/material/styles';
+import MovieTimeline from './pages/MovieTimeline';
 
 import theme from './assets/Colors';
 import './App.css';
@@ -31,6 +32,7 @@ function App(props) {
           <Route path='/profilepagecustomer' element={<AuthDetailsCustomer/>}/>
           <Route path='/dashboard' element={<Dashboard/>}/>
           <Route path='/movie' element={<MovieInstance/>}/>
+          <Route path='/timeline' element={<MovieTimeline/>}/>
           <Route path='/customers' element={<Customers/>}/>
           <Route path='/forgotpassword' element={<ForgotPassword/>}/>
           <Route path='/dashboardcustomer' element={<DashboardCustomer/>}/>

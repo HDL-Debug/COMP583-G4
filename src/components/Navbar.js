@@ -15,6 +15,10 @@ const navs = [
         nav: "../dashboard"
     },
     {
+        name: "Timeline",
+        nav: "../timeline"
+    },
+    {
         name: "Customers",
         nav: "../customers"
     },
@@ -24,7 +28,7 @@ const navs = [
     }
 ]
 
-function Navbar () {
+function Navbar (props) {
     const navigate = useNavigate();
 
     return <AppBar position="static">
