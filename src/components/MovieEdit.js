@@ -53,6 +53,7 @@ function MovieEdit (props) {
     useEffect(() => {
         // This will run every time this opens or closes.
         setEntry(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.open]);
 
     return <Dialog

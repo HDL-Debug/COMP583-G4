@@ -1,9 +1,9 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
-import { auth } from "../../firebase";
+import { auth } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { collection, doc, getDoc, getFirestore } from "firebase/firestore";
-import { findUser } from "../../assets/Utils";
+import { findUser } from "../assets/Utils";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -20,6 +20,8 @@ const SignIn = () => {
             const userID = await findUser(db, userCredential.user.uid);
             getDoc(doc(collection(db, "users"), userID))
                 .then((doc) => {
+                    console.log("User Role")
+                    console.log(doc.data().role)
                     if(doc.data().role === "customer"){
                         navigte('/dashboardcustomer');
                         console.log(userCredential);

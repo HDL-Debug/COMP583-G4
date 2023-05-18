@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Typography, Divider, TextField, IconButton } from '@mui/material';
 import { getFirestore, updateDoc, doc } from 'firebase/firestore';
 import { Delete } from '@mui/icons-material';
-import ShowtimeDelete from './ShowtimeDelete';
+//import ShowtimeDelete from './ShowtimeDelete';
 
 import { findCollection } from "../assets/Utils";
 
@@ -72,7 +72,9 @@ const Showtime = (props) => {
     }, [props.data.seats]);
 
     return (<div style={{display: "flex"}}>
-        <TextField
+        { props.isCustomer
+        ? ""
+        : <TextField
             id="outlined"
             name="seats"
             type="number"
@@ -83,15 +85,19 @@ const Showtime = (props) => {
                 width: 62
             }}
         />
+        }
         <Typography variant="h5" style={{margin: "auto", marginLeft: 5}}>
-            {props.data.month}/{props.data.day}/{props.data.year} {hour}:{minute}
+            {props.isCustomer ? entry + " " : ""}{props.data.month}/{props.data.day}/{props.data.year} {hour}:{minute}
         </Typography>
-        <IconButton 
+        { props.isCustomer 
+        ? ""
+        : <IconButton 
             style={{marginLeft: 5}}
             onClick={(event) => {
                 handleDelete(db, props.title, props.info, props.setInfo, props.index);
             }}
         ><Delete sx={styles.icon}/></IconButton>
+        }
         {props.last ? "" : <Divider />}
     </div>);
 }

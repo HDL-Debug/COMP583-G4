@@ -1,64 +1,114 @@
-import React, { useRef, useState } from "react";
-import { Form, Button, Card, Alert } from 'react-bootstrap';
-import { useAuth } from "../context/AuthContext";
-import { Link, useHistory } from "react-router-dom";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { collection, addDoc } from "firebase/firestore";
+import React, { useState } from "react";
+import { auth, firestore } from "../firebase";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function Signup() {
-  const emailRef = useRef()
-  const passwordRef = useRef()
-  const passwordConfirmRef = useRef()
-  const { signup } = useAuth()
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
-  const history = useHistory()
+const SignUp = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigte = useNavigate();
+  const now = new Date();
 
-  async function handleSubmit(e) {
-    e.preventDefault()
-
-    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-      return setError("Passwords do not match")
+  const signUp = async (e) => {
+    e.preventDefault();
+    e.preventDefault();
+    if (!email || !password) { // check if email and password are not empty
+      alert("Please enter both email and password."); // show alert if either of them is empty
+      return;
     }
-
     try {
-      setError("")
-      setLoading(true)
-      await signup(emailRef.current.value, passwordRef.current.value)
-      history.push("/")
-    } catch {
-      setError("Failed to create an account")
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      await addDoc(collection(firestore, "users"), {
+        uid: userCredential.user.uid,
+        email: userCredential.user.email,
+        role: "customer", // changed role value to customer
+        lastLogin: now.toISOString() // add a new field to track last login time
+      });
+      console.log(userCredential);
+      navigte("/dashboardcustomer");
+    } catch (error) {
+      console.log(error);
     }
-
-    setLoading(false)
-  }
+  };
 
   return (
-    <>
-      <Card>
-        <Card.Body>
-          <h2 className="text-center mb-4">Sign Up</h2>
-          {error && <Alert variant="danger">{error}</Alert>}
-          <Form onSubmit={handleSubmit}>
-            <Form.Group id="email">
-              <Form.Label>Email</Form.Label>
-              <Form.Control type="email" ref={emailRef} required />
-            </Form.Group>
-            <Form.Group id="password">
-              <Form.Label>Password</Form.Label>
-              <Form.Control type="password" ref={passwordRef} required />
-            </Form.Group>
-            <Form.Group id="password-confirm">
-              <Form.Label>Password Confirmation</Form.Label>
-              <Form.Control type="password" ref={passwordConfirmRef} required />
-            </Form.Group>
-            <Button disabled={loading} className="w-100" type="submit">
-              Sign Up
-            </Button>
-          </Form>
-        </Card.Body>
-      </Card>
-      <div className="w-100 text-center mt-2">
-        Already have an account? <Link to="/login">Log In</Link>
-      </div>
-    </>
-  )
-}
+    <div style={{
+      backgroundColor: "#ffffff",
+      borderRadius: 10,
+      boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.05)",
+      padding: "40px 30px",
+      marginTop: 10,
+      width: "30%",
+      marginLeft: "35%",
+      marginRight: "35%",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    }}>
+      <h1 style={{marginBottom: "30px", color: "#333333", fontSize: "24px"}}>
+        Create an Account
+      </h1>
+      <form onSubmit={signUp} style={{width: "100%"}}>
+        <div style={{marginBottom: "20px", width: "100%"}}>
+          <label htmlFor="email" style={{display: "block", marginBottom: "5px", color: "#333333", fontSize: "16px"}}>Email address</label>
+          <input 
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter an email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "10px",
+              borderRadius: "5px",
+              border: "1px solid #dddddd",
+              fontSize: "16px",
+            }}
+          />
+        </div>
+
+        <div style={{marginBottom: "20px", width: "100%"}}>
+          <label htmlFor="password" style={{display: "block", marginBottom: "5px", color: "#333333", fontSize: "16px"}}>Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter a password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "10px",
+              borderRadius: "5px",
+              border: "1px solid #dddddd",
+              fontSize: "16px",
+            }}
+          />
+        </div>
+      
+        <button type="submit" style={{
+          backgroundColor: "#333333",
+          color: "#ffffff",
+          padding: "10px 20px",
+          borderRadius: "5px",
+          border: "none",
+          fontSize: "16px",
+          cursor: "pointer",
+          transition: "all 0.3s ease-in-out",
+        }}>Sign Up</button>
+        <p style={{marginTop: "20px", color: "#666666", fontSize: "14px"}}>
+          Don't have an account yet? <Link to='/' className='underline' style={{color: "#333333"}}>Sign In</Link>
+        </p>
+      </form>
+    </div>
+    
+  );
+};
+
+export default SignUp;

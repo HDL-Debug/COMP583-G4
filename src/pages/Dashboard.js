@@ -33,6 +33,7 @@ function Dashboard (props) {
             fetchCollection(db, "Movies", setMovies);
             doMount.current = false;
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [counter]);
 
     let jsx = <p>No data at the moment.</p>;

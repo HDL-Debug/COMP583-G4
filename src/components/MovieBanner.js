@@ -37,9 +37,11 @@ const MovieBanner = (props) => {
 
     const navigate = useNavigate();
 
+    console.log(props.isCustomer);
+
     return <>
         <div style={styles.banner_container}>
-            <CardActionArea onClick={() => navigate("../movie", {state: data})}>
+            <CardActionArea onClick={() => navigate(props.isCustomer ? "../moviecustomer" : "../movie", {state: data})}>
             <CardMedia
                 sx={{
                     width: '100%',
@@ -53,7 +55,9 @@ const MovieBanner = (props) => {
             >
                 <div style={styles.banner_inner_content}>
                     <Typography variant="h4" style={{paddingTop: 15, paddingLeft: 10}}>{data.title}</Typography>
-                    <div style={{marginTop: 15, marginLeft: "auto"}}>
+                    { props.isCustomer 
+                    ? ""
+                    : <div style={{marginTop: 15, marginLeft: "auto"}}>
                         <IconButton 
                             style={{marginRight: 5}}
                             onMouseDown={(event) => event.stopPropagation()}
@@ -73,6 +77,7 @@ const MovieBanner = (props) => {
                             }}
                         ><Create sx={styles.icon}/></IconButton>
                     </div>
+                    }
                 </div>
             </CardMedia>
             </CardActionArea>

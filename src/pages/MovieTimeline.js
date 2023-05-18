@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Timeline from 'react-calendar-timeline';
 import 'react-calendar-timeline/lib/Timeline.css';
 import moment from 'moment';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/NavbarCustomer';
 import { fetchCollection } from '../assets/Utils';
 import { getFirestore } from 'firebase/firestore';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -17,19 +17,9 @@ const MovieTimeline = () => {
 
     useEffect(() => {
         fetchCollection(db, "Movies", setMovies);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    /*
-    console.log(moment("20230320"));
-
-    if (movies) {
-        for (let i in movies) {
-            console.log(movies[i].data())
-        }
-        movies.forEach(e => console.log(e.data()))
-    }
-    console.log(movies)
-    */
     const groups = [];
     const items = [];
     if (movies)
@@ -40,11 +30,6 @@ const MovieTimeline = () => {
             })
             movie.data().showtimes.forEach((showtime, sIndex) => {
                 const date = `${showtime.year}${showtime.month > 9 ? showtime.month : "0" + showtime.month}${showtime.day > 9 ? showtime.day : "0" + showtime.day}`;
-                /*
-                console.log(`Start: ${curr.add(showtime.startHour, 'hour').add(showtime.startMinute, 'minute')}\n
-                    End: ${curr.add(showtime.startHour + movie.data().durationHours, 'hour').add(showtime.startMinute + movie.data().durationMinutes, 'minute')}
-                `);
-                */
                 items.push({
                     id: parseInt(`${mIndex}${sIndex}`) + 1,
                     group: mIndex,

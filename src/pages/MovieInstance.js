@@ -56,11 +56,15 @@ const MovieInstance = (props) => {
     const addShowtime = () => {
         let endHour = entry.startHour + info.durationHours;
         let endMinute = entry.startMinute + info.durationMinutes;
+        let startTime = entry.startHour + (entry.startMinute / 60);
+        let endTime = endHour + (endMinute / 60);
         for (let iter in info.showtimes) {
             iter = info.showtimes[iter];
             console.log(`Start: ${entry.startHour} | Iter Start: ${iter.startHour}`)
             let iterEndHour = iter.startHour + info.durationHours;
             let iterEndMinute = iter.startMinute + info.durationMinutes;
+            let iterStartTime = iter.startHour + (iter.startMinute / 60);
+            let iterEndTime = iterEndHour + (iterEndMinute / 60);
             if (iter.startHour <= endHour && iter.startHour >= entry.startHour) {
                 // Popup a modal to say that there is an issue.
                 return; // Can't add. Overlapping time.
