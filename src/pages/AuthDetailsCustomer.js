@@ -2,7 +2,7 @@ import { onAuthStateChanged, sendPasswordResetEmail, signOut, updateEmail } from
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
 import { useNavigate } from "react-router-dom";
-import NavbarCustomer from './NavbarCustomer';
+import NavbarCustomer from '../components/NavbarCustomer';
 import { collection, doc, getDoc, getFirestore } from "firebase/firestore";
 import { findUser } from "../assets/Utils";
 

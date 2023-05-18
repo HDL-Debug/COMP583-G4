@@ -2,13 +2,13 @@ import React from 'react';
 import { doc, deleteDoc, getFirestore } from "firebase/firestore";
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 
-import { findMovie } from "../assets/Utils";
+import { findCollection } from "../assets/Utils";
 
 const handleClose = (db, title, setOpenDelete, forceUpdate, deleteMovie) => {
     if (deleteMovie) {
         // Handle removing the movie here.
         // Remove it from the database.
-        findMovie(db, "Movies", title).then((movieID) => {
+        findCollection(db, "Movies", title).then((movieID) => {
             if (movieID) {
                 deleteDoc(doc(db, "Movies", movieID)).then(() => console.log(title + " was removed.")).then(() => forceUpdate());
             }

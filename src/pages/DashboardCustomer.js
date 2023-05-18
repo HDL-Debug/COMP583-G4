@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef, useReducer } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { collection, getDocs } from "firebase/firestore";
 import { getFirestore } from 'firebase/firestore';
-import { Button } from '@mui/material';
 import Navbar from '../components/NavbarCustomer';
 import MovieBanner from '../components/MovieBanner';
 
@@ -24,11 +23,6 @@ const fetchCollection = async (db, collectionName, setData) => {
 function DashboardCustomer(props) {
     const doMount = useRef(true);
     const [movies, setMovies] = useState([]);
-    const [open, setOpen] = useState(false);
-    const [counter, forceUpdate] = useReducer(e => {
-        doMount.current = true;
-        return e + 1;
-    }, 0);
 
     const db = getFirestore();
 
@@ -38,13 +32,14 @@ function DashboardCustomer(props) {
             fetchCollection(db, "Movies", setMovies);
             doMount.current = false;
         }
-    }, [counter]);
+    }, []);
 
     let jsx = <p>No data at the moment.</p>;
     if (movies.length > 0) {
         jsx = movies.map((e, index) => <MovieBanner 
             data={e.data()}
             key={"b"+index}
+            isCustomer={true}
         />);
     }
 

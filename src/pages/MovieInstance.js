@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useReducer } from 'react';
 import Navbar from '../components/Navbar';
 import dayjs from 'dayjs';
 import { Typography, Divider, TextField, Button } from '@mui/material';
@@ -11,7 +11,7 @@ import Showtime from "../components/Showtime";
 
 import { getFirestore, updateDoc, doc } from 'firebase/firestore';
 
-import { provideAll, handleEntryChange, findMovie } from "../assets/Utils";
+import { provideAll, handleEntryChange, findCollection } from "../assets/Utils";
 
 // Showtime Structure
 // {
@@ -24,19 +24,29 @@ import { provideAll, handleEntryChange, findMovie } from "../assets/Utils";
 // }
 // startHour and startMinute are in military time.
 
+const getIndex = (array, item) => {
+    let index = -1;
+    array.forEach((e, i) => {
+        if ((item.day === e.day) && (item.month === e.month) && (item.startHour === e.startHour) && (item.startMinute === e.startMinute) && (item.year === e.year)) {
+            index = i;
+        }
+    });
+    return index;
+}
+
 const MovieInstance = (props) => {
+    console.log("=== Render ===");
     const nowRef = useRef(dayjs());
 
     const now = nowRef.current;
     const location = useLocation().state;
-
 
     const db = getFirestore();
 
     const [info, setInfo] = useState(provideAll(location));
     const [entry, setEntry] = useState({
         day: now.$D,
-        month: now.$M,
+        month: now.$M + 1,
         year: now.$y,
         seats: 1,
         startHour: now.$H,
@@ -44,27 +54,33 @@ const MovieInstance = (props) => {
     });
 
     const addShowtime = () => {
-        /*
         let endHour = entry.startHour + info.durationHours;
         let endMinute = entry.startMinute + info.durationMinutes;
-        for (let showtime in info.showtimes) {
-            let showtimeEndHour = showtime.startHour + info.durationHours;
-            let showtimeEndMinute = showtime.startMinute + info.durationMinutes;
-            if (showtime.startHour < endHour) {
-                if (entry.startHour < showtime.startHour) {
-                    // Popup a modal to say that there is an issue.
-                    return; // Can't add. Overlapping time.
-                }
+        let startTime = entry.startHour + (entry.startMinute / 60);
+        let endTime = endHour + (endMinute / 60);
+        for (let iter in info.showtimes) {
+            iter = info.showtimes[iter];
+            console.log(`Start: ${entry.startHour} | Iter Start: ${iter.startHour}`)
+            let iterEndHour = iter.startHour + info.durationHours;
+            let iterEndMinute = iter.startMinute + info.durationMinutes;
+            let iterStartTime = iter.startHour + (iter.startMinute / 60);
+            let iterEndTime = iterEndHour + (iterEndMinute / 60);
+            if (iter.startHour <= endHour && iter.startHour >= entry.startHour) {
+                // Popup a modal to say that there is an issue.
+                return; // Can't add. Overlapping time.
             }
-            else if (entry.startHour < showtimeEndHour) {
+            else if (entry.startHour <= iterEndHour && entry.startHour >= iter.startHour) {
+                // Model here too.
+                return;
             }
         }
-        */
-        // Otherwise add to the stuff.
+        console.log("Pushing to showtimes");
+        // Otherwise add to database.
         let newShowtimes = JSON.parse(JSON.stringify(info.showtimes));
         newShowtimes = newShowtimes === 1 ? [] : newShowtimes;
+        entry.seats = parseInt(entry.seats); // Make sure seats is an int.
         newShowtimes.push(entry);
-        findMovie(db, "Movies", info.title).then((movieID) => {
+        findCollection(db, "Movies", info.title).then((movieID) => {
             console.log(movieID);
             if (movieID) {
                 console.log(movieID);
@@ -73,6 +89,7 @@ const MovieInstance = (props) => {
                 });
             }
         });
+        // Change locally as well.
         setInfo({
             ...info,
             showtimes: newShowtimes,
@@ -99,13 +116,22 @@ const MovieInstance = (props) => {
     let i = 0;
     let jsx = <Typography>No showtimes in records.</Typography>;
     if (info.showtimes.length > 0) {
+        console.log(info.showtimes);
         jsx = [];
         info.showtimes.filter((e) => {
             return (e.month === entry.month) && (e.day === entry.day) && (e.year === entry.year);
         }).sort((a, b) => {
             return (a.startHour - b.startHour) + ((a.startMinute - b.startMinute)/60)
         }).forEach((e, index, arr) => {
-            jsx.push(<Showtime data={e} title={info.title} key={"s" + (++i)} last={(index + 1) === arr.length}/>);
+            jsx.push(<Showtime 
+                data={e}  
+                index={getIndex(info.showtimes, e)} 
+                title={info.title} 
+                key={"s" + (++i)} 
+                last={(index + 1) === arr.length}
+                info={info}
+                setInfo={setInfo}
+            />);
         });
         if (jsx.length === 0) {
             jsx = <Typography>No showtimes in records.</Typography>;

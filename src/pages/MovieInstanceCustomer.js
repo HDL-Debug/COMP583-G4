@@ -24,47 +24,62 @@ import { provideAll, handleEntryChange, findMovie } from "../assets/Utils";
 // }
 // startHour and startMinute are in military time.
 
-const MovieInstanceCustomer = (props) => {
+const getIndex = (array, item) => {
+    let index = -1;
+    array.forEach((e, i) => {
+        if ((item.day === e.day) && (item.month === e.month) && (item.startHour === e.startHour) && (item.startMinute === e.startMinute) && (item.year === e.year)) {
+            index = i;
+        }
+    });
+    return index;
+}
+
+const MovieInstance = (props) => {
+    console.log("=== Render ===");
     const nowRef = useRef(dayjs());
 
     const now = nowRef.current;
     const location = useLocation().state;
 
-
-    const db = getFirestore();
-
     const [info, setInfo] = useState(provideAll(location));
     const [entry, setEntry] = useState({
         day: now.$D,
-        month: now.$M,
+        month: now.$M + 1,
         year: now.$y,
         seats: 1,
         startHour: now.$H,
         startMinute: now.$m,
     });
 
-
-
-
-
-    const handleTimeChange = (e) => {
+    const handleDateChange = (e) => {
         setEntry({
             ...entry,
-            startHour: e.$H,
-            startMinute: e.$m,
+            day: e.$D,
+            month: e.$M + 1,
+            year: e.$y,
         });
     }
 
     let i = 0;
     let jsx = <Typography>No showtimes in records.</Typography>;
     if (info.showtimes.length > 0) {
+        console.log(info.showtimes);
         jsx = [];
         info.showtimes.filter((e) => {
             return (e.month === entry.month) && (e.day === entry.day) && (e.year === entry.year);
         }).sort((a, b) => {
             return (a.startHour - b.startHour) + ((a.startMinute - b.startMinute)/60)
         }).forEach((e, index, arr) => {
-            jsx.push(<Showtime data={e} title={info.title} key={"s" + (++i)} last={(index + 1) === arr.length}/>);
+            jsx.push(<Showtime 
+                data={e}  
+                index={getIndex(info.showtimes, e)} 
+                title={info.title} 
+                key={"s" + (++i)} 
+                last={(index + 1) === arr.length}
+                info={info}
+                setInfo={setInfo}
+                isCustomer={true}
+            />);
         });
         if (jsx.length === 0) {
             jsx = <Typography>No showtimes in records.</Typography>;
@@ -88,7 +103,18 @@ const MovieInstanceCustomer = (props) => {
         <div style={{
             display: "flex",
         }}>
-            
+            <div style={{flex: 0.5}}>
+                <div style={{width: "fit-content", marginLeft: "auto"}}>
+                    <DateCalendar 
+                        onChange={handleDateChange}
+                        style={{
+                            backgroundColor: "rgb(231, 235, 240, 0.7)",
+                            margin: 10,
+                            borderRadius: 5
+                        }}
+                    />
+                </div>
+            </div>
             <Divider flexItem={true} orientation="vertical" variant="middle" sx={{ borderRightWidth: 2 }}/>
             <div style={{
                 flex: 0.5, 
@@ -103,23 +129,8 @@ const MovieInstanceCustomer = (props) => {
                     {jsx}
                 </div>
                 <br />
-                <div>
-                    <TextField
-                        required
-                        id="outlined-required"
-                        label="Required"
-                        name="seats"
-                        type="number"
-                        value={entry.seats}
-                        onChange={(e) => handleEntryChange(e, entry, setEntry)}
-                        style={{
-                            height: 40,
-                            marginRight: 5
-                        }}
-                    />
-                </div>
             </div>
         </div>
     </LocalizationProvider>;
 }
-export default MovieInstanceCustomer;
+export default MovieInstance;

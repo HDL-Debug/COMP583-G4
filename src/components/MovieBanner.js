@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { CardMedia, CardActionArea, IconButton, Button, Typography } from '@mui/material';
+import { CardMedia, CardActionArea, IconButton, Typography } from '@mui/material';
 import { Delete, Create } from '@mui/icons-material';
-import MovieForm from './MovieForm';
+import MovieEdit from './MovieEdit';
 import MovieDelete from './MovieDelete'
 
 import { useNavigate } from "react-router-dom";
 
-import { findMovie, provideAll } from "../assets/Utils";
+import { provideAll } from "../assets/Utils";
 
 // Consider using CardMedia for background image
 
@@ -37,9 +37,11 @@ const MovieBanner = (props) => {
 
     const navigate = useNavigate();
 
+    console.log(props.isCustomer);
+
     return <>
         <div style={styles.banner_container}>
-            <CardActionArea onClick={() => navigate("../movie", {state: data})}>
+            <CardActionArea onClick={() => navigate(props.isCustomer ? "../moviecustomer" : "../movie", {state: data})}>
             <CardMedia
                 sx={{
                     width: '100%',
@@ -53,7 +55,9 @@ const MovieBanner = (props) => {
             >
                 <div style={styles.banner_inner_content}>
                     <Typography variant="h4" style={{paddingTop: 15, paddingLeft: 10}}>{data.title}</Typography>
-                    <div style={{marginTop: 15, marginLeft: "auto"}}>
+                    { props.isCustomer 
+                    ? ""
+                    : <div style={{marginTop: 15, marginLeft: "auto"}}>
                         <IconButton 
                             style={{marginRight: 5}}
                             onMouseDown={(event) => event.stopPropagation()}
@@ -73,6 +77,7 @@ const MovieBanner = (props) => {
                             }}
                         ><Create sx={styles.icon}/></IconButton>
                     </div>
+                    }
                 </div>
             </CardMedia>
             </CardActionArea>
@@ -83,8 +88,7 @@ const MovieBanner = (props) => {
             setOpenDelete={setOpenDelete}
             forceUpdate={props.forceUpdate}
         />
-        <MovieForm 
-            variant="edit"
+        <MovieEdit 
             data={data}
             open={openEdit}
             setOpen={setOpenEdit}
