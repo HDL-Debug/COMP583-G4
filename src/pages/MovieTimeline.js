@@ -50,7 +50,7 @@ const MovieTimeline = () => {
                     group: mIndex,
                     start_time: moment(date).add(showtime.startHour, 'hour').add(showtime.startMinute, 'minute'),
                     end_time: moment(date).add(showtime.startHour + movie.data().durationHours, 'hour').add(showtime.startMinute + movie.data().durationMinutes, 'minute'),
-                    title: 'Text',
+                    title: '' + showtime.seats,
                     itemProps: {
                         onDoubleClick: () => {
                             navigate("../movie", {state: movie.data()})

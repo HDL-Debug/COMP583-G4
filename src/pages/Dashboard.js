@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef, useReducer } from 'react';
-import { collection, getDocs } from "firebase/firestore";
 import { getFirestore } from 'firebase/firestore';
 import { Button } from '@mui/material';
 import Navbar from '../components/Navbar';
-import MovieForm from '../components/MovieForm';
+import MovieAdd from '../components/MovieAdd';
 import MovieBanner from '../components/MovieBanner';
 import { fetchCollection } from '../assets/Utils';
 
@@ -51,7 +50,7 @@ function Dashboard (props) {
             <Button variant="contained" style={styles.add_button} onClick={() => setOpen(true)}>Add Movie</Button>
             {jsx}
         </div>
-        <MovieForm 
+        <MovieAdd 
             open={open}
             setOpen={setOpen}
             doMount={doMount}

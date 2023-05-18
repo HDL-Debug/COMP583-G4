@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { CardMedia, CardActionArea, IconButton, Button, Typography } from '@mui/material';
+import { CardMedia, CardActionArea, IconButton, Typography } from '@mui/material';
 import { Delete, Create } from '@mui/icons-material';
-import MovieForm from './MovieForm';
+import MovieEdit from './MovieEdit';
 import MovieDelete from './MovieDelete'
 
 import { useNavigate } from "react-router-dom";
 
-import { findMovie, provideAll } from "../assets/Utils";
+import { provideAll } from "../assets/Utils";
 
 // Consider using CardMedia for background image
 
@@ -83,8 +83,7 @@ const MovieBanner = (props) => {
             setOpenDelete={setOpenDelete}
             forceUpdate={props.forceUpdate}
         />
-        <MovieForm 
-            variant="edit"
+        <MovieEdit 
             data={data}
             open={openEdit}
             setOpen={setOpenEdit}
