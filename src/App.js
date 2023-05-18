@@ -10,7 +10,7 @@ import AuthDetailsCustomer from "./components/AuthDetailsCustomer";
 import Customers from "./pages/Customers";
 import { ThemeProvider } from '@mui/material/styles';
 import MovieTimeline from './pages/MovieTimeline';
-
+import MovieInstanceCustomer from "./pages/MovieInstanceCustomer";
 import theme from './assets/Colors';
 import './App.css';
 import DashboardCustomer from "./pages/DashboardCustomer";
@@ -31,6 +31,7 @@ function App(props) {
           <Route path='/profilepage' element={<AuthDetails/>}/>
           <Route path='/profilepagecustomer' element={<AuthDetailsCustomer/>}/>
           <Route path='/dashboard' element={<Dashboard/>}/>
+          <Route path='/moviecustomer' element={<MovieInstanceCustomer/>}/>
           <Route path='/movie' element={<MovieInstance/>}/>
           <Route path='/timeline' element={<MovieTimeline/>}/>
           <Route path='/customers' element={<Customers/>}/>
